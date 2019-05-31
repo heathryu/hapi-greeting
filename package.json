@@ -1,0 +1,10 @@
+{
+  "name": "hapi-greeting",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Heath Ryu",
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/hapi": "^18.3.1"
+  }
+}
