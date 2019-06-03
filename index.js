@@ -39,7 +39,31 @@ const init = async () => {
         path: 'public'
       }
     }
+  });
+
+  server.route({
+    path: '/cards',
+    method: 'GET',
+    handler: {
+      file: 'templates/cards.html'
+    }
   })
+
+  server.route({
+    path: '/cards/new',
+    method: 'GET',
+    handler: (req, h) => {
+      return h.file('templates/new.html');
+    }
+  });
+
+  server.route({
+    path: '/cards/new',
+    method: 'POST',
+    handler: (req, h) => {
+      return h.redirect('/cards');
+    }
+  });
 
   await server.start();
   console.log('Server running on %s', server.info.uri);
