@@ -44,30 +44,30 @@ const init = async () => {
   server.route({
     path: '/cards',
     method: 'GET',
-    handler: {
-      file: 'templates/cards.html'
-    }
+    handler: cardsHandler
   })
 
   server.route({
     path: '/cards/new',
-    method: 'GET',
-    handler: (req, h) => {
-      return h.file('templates/new.html');
-    }
-  });
-
-  server.route({
-    path: '/cards/new',
-    method: 'POST',
-    handler: (req, h) => {
-      return h.redirect('/cards');
-    }
+    method: ['GET', 'POST'],
+    handler: newCardsHandler
   });
 
   await server.start();
   console.log('Server running on %s', server.info.uri);
 };
+
+const cardsHandler = (req, h) => {
+  return h.file('templates/cards.html');
+}
+
+const newCardsHandler = (req, h) => {
+  if (req.method === 'get') {
+    return h.file('templates/new.html');
+  } else if (req.method === 'post') {
+    return h.redirect('/cards');
+  }
+}
 
 process.on('unhandledRjection', err => {
   console.log(err);
