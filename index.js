@@ -19,11 +19,11 @@ const init = async () => {
   });
 
   server.route({
-      path: '/hello',
-      method: 'GET',
-      handler: (req, h) => {
-        return 'hello';
-      }
+    path: '/hello',
+    method: 'GET',
+    handler: (req, h) => {
+      return 'hello';
+    }
   });
 
   server.route({
@@ -48,7 +48,7 @@ const init = async () => {
     path: '/cards',
     method: 'GET',
     handler: cardsHandler
-  })
+  });
 
   server.route({
     path: '/cards/new',
@@ -60,7 +60,7 @@ const init = async () => {
     path: '/cards/{id}',
     method: 'DELETE',
     handler: deleteCardHandler
-  })
+  });
 
   await server.start();
   console.log('Server running on %s', server.info.uri);
@@ -74,7 +74,6 @@ const newCardHandler = (req, h) => {
   if (req.method === 'get') {
     return h.file('templates/new.html');
   } else if (req.method === 'post') {
-
     const card = {
       name: req.payload.name,
       recipient_email: req.payload.recipient_email,
@@ -95,7 +94,7 @@ const deleteCardHandler = (req, h) => {
   delete cards[req.params.id];
 };
 
-const saveCard = (card) => {
+const saveCard = card => {
   const id = uuid.v1();
   card.id = id;
   cards[id] = card;
