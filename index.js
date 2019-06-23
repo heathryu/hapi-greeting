@@ -2,6 +2,7 @@
 
 const Hapi = require('@hapi/hapi');
 const Joi = require('@hapi/joi');
+const Boom = require('@hapi/boom');
 const uuid = require('uuid');
 const fs = require('fs');
 
@@ -30,6 +31,14 @@ const init = async () => {
 
   server.ext('onRequest', (req, h) => {
     console.log('Received request: ' + req.path);
+    return h.continue;
+  });
+
+  server.ext('onPreResponse', (req, h) => {
+    if (req.response.isBoom) {
+      return h.view('error', req.response);
+    }
+
     return h.continue;
   });
 
@@ -115,7 +124,7 @@ const newCardHandler = (req, h) => {
   } else if (req.method === 'post') {
     return Joi.validate(req.payload, cardSchema, (err, val) => {
       if (err) {
-        return h.response('error').code(400); // TODO: Use Boom for error handling
+        throw Boom.badRequest(err.details[0].message);
       }
 
       const card = {
