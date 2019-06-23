@@ -12,6 +12,14 @@ const init = async () => {
   });
 
   await server.register(require('@hapi/inert'));
+  await server.register(require('@hapi/vision'));
+
+  server.views({
+    engines: {
+      html: require('handlebars')
+    },
+    path: 'templates'
+  });
 
   server.ext('onRequest', (req, h) => {
     console.log('Received request: ' + req.path);
@@ -67,12 +75,12 @@ const init = async () => {
 };
 
 const cardsHandler = (req, h) => {
-  return h.file('templates/cards.html');
+  return h.view('cards');
 };
 
 const newCardHandler = (req, h) => {
   if (req.method === 'get') {
-    return h.file('templates/new.html');
+    return h.view('new');
   } else if (req.method === 'post') {
     const card = {
       name: req.payload.name,
