@@ -80,13 +80,17 @@ const init = async () => {
   console.log('Server running on %s', server.info.uri);
 };
 
+const mapImages = () => {
+  return fs.readdirSync('./public/images/cards');
+};
+
 const cardsHandler = (req, h) => {
   return h.view('cards', { cards });
 };
 
 const newCardHandler = (req, h) => {
   if (req.method === 'get') {
-    return h.view('new');
+    return h.view('new', { cardImages: mapImages() });
   } else if (req.method === 'post') {
     const card = {
       name: req.payload.name,
