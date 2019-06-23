@@ -2,8 +2,14 @@
 
 const Hapi = require('@hapi/hapi');
 const uuid = require('uuid');
+const fs = require('fs');
 
-const cards = {};
+const loadCards = () => {
+  const file = fs.readFileSync('./cards.json');
+  return JSON.parse(file.toString());
+};
+
+const cards = loadCards();
 
 const init = async () => {
   const server = Hapi.server({
@@ -75,7 +81,7 @@ const init = async () => {
 };
 
 const cardsHandler = (req, h) => {
-  return h.view('cards');
+  return h.view('cards', { cards });
 };
 
 const newCardHandler = (req, h) => {
@@ -100,6 +106,7 @@ const newCardHandler = (req, h) => {
 
 const deleteCardHandler = (req, h) => {
   delete cards[req.params.id];
+  return h.response();
 };
 
 const saveCard = card => {
