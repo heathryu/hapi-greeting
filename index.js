@@ -1,6 +1,7 @@
 'use strict';
 
 const Hapi = require('@hapi/hapi');
+const Joi = require('@hapi/joi');
 const uuid = require('uuid');
 const fs = require('fs');
 
@@ -88,23 +89,49 @@ const cardsHandler = (req, h) => {
   return h.view('cards', { cards });
 };
 
+var cardSchema = Joi.object().keys({
+  name: Joi.string()
+    .min(3)
+    .max(50)
+    .required(),
+  recipient_email: Joi.string()
+    .email()
+    .required(),
+  sender_name: Joi.string()
+    .min(3)
+    .max(50)
+    .required(),
+  sender_email: Joi.string()
+    .email()
+    .required(),
+  card_image: Joi.string()
+    .regex(/.+\.(jpg|bmp|png|gif)\b/)
+    .required()
+});
+
 const newCardHandler = (req, h) => {
   if (req.method === 'get') {
     return h.view('new', { cardImages: mapImages() });
   } else if (req.method === 'post') {
-    const card = {
-      name: req.payload.name,
-      recipient_email: req.payload.recipient_email,
-      sender_name: req.payload.sender_name,
-      sender_email: req.payload.sender_email,
-      card_image: req.payload.card_image
-    };
+    return Joi.validate(req.payload, cardSchema, (err, val) => {
+      if (err) {
+        return h.response('error').code(400); // TODO: Use Boom for error handling
+      }
 
-    saveCard(card);
+      const card = {
+        name: val.name,
+        recipient_email: val.recipient_email,
+        sender_name: val.sender_name,
+        sender_email: val.sender_email,
+        card_image: val.card_image
+      };
 
-    console.log(cards);
+      saveCard(card);
 
-    return h.redirect('/cards');
+      console.log(cards);
+
+      return h.redirect('/cards');
+    });
   }
 };
 
