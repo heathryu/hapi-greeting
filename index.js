@@ -3,6 +3,8 @@
 const Hapi = require('@hapi/hapi');
 const Joi = require('@hapi/joi');
 const Boom = require('@hapi/boom');
+const Good = require('@hapi/good');
+const GoodFileReporter = require('./lib/goodFileReporter');
 const uuid = require('uuid');
 const fs = require('fs');
 
@@ -29,9 +31,60 @@ const init = async () => {
     path: 'templates'
   });
 
-  server.ext('onRequest', (req, h) => {
-    console.log('Received request: ' + req.path);
-    return h.continue;
+  await server.register({
+    plugin: Good,
+    options: {
+      ops: {
+        interval: 10000
+      },
+      reporters: {
+        processReporter: [
+          {
+            module: '@hapi/good-squeeze',
+            name: 'Squeeze',
+            args: [{ ops: '*' }]
+          },
+          {
+            module: '@hapi/good-squeeze',
+            name: 'SafeJson'
+          },
+          {
+            module: GoodFileReporter,
+            args: ['./logs/process']
+          }
+        ],
+        requestsReporter: [
+          {
+            module: '@hapi/good-squeeze',
+            name: 'Squeeze',
+            args: [{ response: '*' }]
+          },
+          {
+            module: '@hapi/good-squeeze',
+            name: 'SafeJson'
+          },
+          {
+            module: GoodFileReporter,
+            args: ['./logs/requests']
+          }
+        ],
+        errorReporter: [
+          {
+            module: '@hapi/good-squeeze',
+            name: 'Squeeze',
+            args: [{ error: '*' }]
+          },
+          {
+            module: '@hapi/good-squeeze',
+            name: 'SafeJson'
+          },
+          {
+            module: GoodFileReporter,
+            args: ['./logs/errors']
+          }
+        ]
+      }
+    }
   });
 
   server.ext('onPreResponse', (req, h) => {
