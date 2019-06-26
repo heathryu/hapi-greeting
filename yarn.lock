@@ -98,6 +98,16 @@
   dependencies:
     "@hapi/boom" "7.x.x"
 
+"@hapi/cookie@^10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@hapi/cookie/-/cookie-10.1.0.tgz#00cc81e4c1efee7b8203308c20799dd9a5ce7a78"
+  integrity sha512-cMMkvJIuqByvh1E84qW4iyLR4iak3TeeZSKN78muIC2rBUou236u2M7gw+VmolerW7sj9uCuOg5qnYBu8MIQyg==
+  dependencies:
+    "@hapi/boom" "7.x.x"
+    "@hapi/bounce" "1.x.x"
+    "@hapi/hoek" "6.x.x"
+    "@hapi/joi" "15.x.x"
+
 "@hapi/cryptiles@4.x.x":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@hapi/cryptiles/-/cryptiles-4.2.0.tgz#d22bd5afa54f3c1a3b944a43dadfd4c5e5747f72"

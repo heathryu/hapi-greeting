@@ -2,6 +2,8 @@
 
 const Hapi = require('@hapi/hapi');
 
+const Cookie = require('@hapi/Cookie');
+
 const Good = require('@hapi/good');
 const GoodFileReporter = require('./lib/goodFileReporter');
 
@@ -26,6 +28,18 @@ const init = async () => {
     },
     path: 'templates'
   });
+
+  await server.register(Cookie);
+
+  server.auth.strategy('session', 'cookie', {
+    cookie: {
+      password: 'soSecure',
+      isSecure: false
+    },
+    redirectTo: '/login'
+  });
+
+  server.auth.default('session');
 
   await server.register({
     plugin: Good,
