@@ -5,7 +5,8 @@
   "author": "Heath Ryu",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "lint": "eslint --fix . && echo 'Lint complete!'"
   },
   "dependencies": {
     "@hapi/boom": "^7.4.2",
