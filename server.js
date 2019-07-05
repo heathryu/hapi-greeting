@@ -10,8 +10,10 @@ const GoodFileReporter = require('./lib/goodFileReporter');
 const Routes = require('./lib/routes');
 
 const CardStore = require('./lib/cardStore');
+const UserStore = require('./lib/userStore');
 
 CardStore.initialize();
+UserStore.initialize();
 
 const init = async () => {
   const server = Hapi.server({
@@ -33,7 +35,7 @@ const init = async () => {
 
   server.auth.strategy('session', 'cookie', {
     cookie: {
-      password: 'soSecure',
+      password: 'password-should-be-32-characters',
       isSecure: false
     },
     redirectTo: '/login'
